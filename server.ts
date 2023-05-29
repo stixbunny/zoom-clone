@@ -22,9 +22,13 @@ io.on('connection', socket => {
     socket.on('join-room', (roomId, userId) => {
         console.log(`connecting userId: ${userId} to roomId: ${roomId}`);
         socket.join(roomId);
-        socket.broadcast.to(roomId).emit('user-connected', userId);
+        // socket.broadcast.to(roomId).emit('user-connected', userId);
         socket.on('disconnect', () => {
             socket.broadcast.to(roomId).emit('user-disconnected', userId);
+        });
+        socket.on('connection-request', (roomId, userId) => {
+            console.log("connection request");
+            io.to(roomId).emit('new-user-connected', userId);
         });
     });
 });

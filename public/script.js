@@ -24,9 +24,16 @@ navigator.mediaDevices.getUserMedia({
             addVideoStream(video, userVideoStream);
         });
     });
-    socket.on('user-connected', userId => {
-        connectToNewUser(userId, stream);
+    socket.on('new-user-connected', userId => {
+        if (userId != myPeer.id) {
+            console.log("New user: " + userId);
+            connectToNewUser(userId, stream);
+        }
     });
+    // socket.on('user-connected', userId => {
+    //     connectToNewUser(userId, stream);
+    // });
+    socket.emit('connection-request', ROOM_ID, myPeer.id);
 });
 
 socket.on('user-disconnected', userId => {
